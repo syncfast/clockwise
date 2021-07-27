@@ -14,6 +14,12 @@ import (
 // URL. It runs in a loop and updates the passed in `Data` struct every
 // `refreshInterval` seconds.
 func GetParticipants(url string, refreshInterval int, data *tui.Data, pw *playwright.Playwright) error {
+	if strings.Contains(url, "zoom.us/my/") {
+		return fmt.Errorf(`Error: clockwise is not compatible with Zoom Personal Meeting IDs at the moment.
+Disabling your PMI is as as simple as clicking a checkbox.
+Please visit https://support.zoom.us/hc/en-us/articles/203276937-Using-Personal-Meeting-ID-PMI- for more info.`)
+	}
+
 	var timeout float64 = 5000
 
 	url = mutateURL(url)
