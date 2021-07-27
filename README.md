@@ -44,21 +44,22 @@ $ clockwise set
 Alternatively, you can edit the configuration file directly at
 `~/.config/clockwise/clockwise.yaml`.
 
-## Output
-Clockwise outputs total cost to a TUI that is refreshed every 500ms.
+## TUI
+Clockwise outputs total cost to a terminal UI (courtesy
+[tcell](https://github.com/gdamore/tcell)) that is refreshed every 500ms.
 
-## Displaying total cost in zoom
-Clockwise, in conjunction with [OBS](https://obsproject.com/), can take your
-total meeting cost at it increases in real time and turn it into a virtual
-camera. This can then be consumed by Zoom to passive aggressively remind
-everyone precisely how much a given meeting costs. Anecdotally, this raised
-awareness led to more focused and less frequent meetings for my team. To change
-something, track it. 
+## Displaying total cost in your Zoom meeting
+In conjunction with [OBS](https://obsproject.com/), Clockwise can print your
+total meeting cost at it increases in real time to a virtual camera. The virtual
+camera can then be consumed by Zoom to passive aggressively remind everyone
+precisely how much a given meeting costs. Anecdotally, this raised awareness and
+led to more focused and less frequent meetings for my team. To change something,
+track it. 
 
 ## OBS Configuration
 OBS configuration is a bit involved, but it's something that you only need to do
-once. Long term, I would like to replace OBS with something like FFMPEG that
-doesn't depend on an external GUI.
+once. Long term, it would be nice to replace OBS with something like FFMPEG that
+doesn't depend on an external GUI. 
 
 - Install [OBS](https://obsproject.com/).
     ```bash
@@ -102,12 +103,18 @@ doesn't depend on an external GUI.
 That's it! Make sure to add snarky remarks when your meetings drag on for added
 effect.
 
+## Contributing
+Contributions are welcome and appreciated. This project is in a very early stage
+of development and I consider myself a novice Gopher. None of the code is
+sacrosanct. Feel free to eviscerate it.
+
 ## To do
-- [ ] Do a pass through to make sure that errors are bubbling up and being
-  handled properly.
-- [ ] Explore authenticated web scraping approach.
-- [ ] Explore Zoom's captcha requirement.
+These are up for grabs! If anything in this list interests you, feel free to
+open an issue expressing your intent to tackle it. Happy to field questions as
+they surface. Also, the list is not comprehensive, feature requests are welcome
+and appreciated.
 - [ ] Unit test all the things.
+- [ ] Explore authenticated web scraping approach.
 - [ ] Explore replacing OBS with a solution that doesn't require a GUI, like
   ffmpeg. 
 - [ ] Explore time-series based approach.
@@ -115,15 +122,20 @@ effect.
 - [ ] Handle browser startup more gracefully. 
 - [ ] Make the TUI prettier.
 - [ ] Explore letting the clockwork zoom participant display the meeting cost. 
-- [ ] Consider making the clockwork-bot zoom participant name configurable.
+- [ ] Consider making the clockwork-bot zoom participant name configurable via
+  the config file.
 - [ ] Implement CI via GH actions.
-- [ ] Currently, Clockwise does not work with meetings spawned by the Slack zoom
-  integration. It shouldn't be to difficult to implement. We just need some more
-  nuanced url handling in [zoom.go](internal/scrape/zoom.go).
 - [ ] Implement
   [PMI](https://support.zoom.us/hc/en-us/articles/203276937-Using-Personal-Meeting-ID-PMI-)
-  handling. 
+  handling (likely through a flag). 
 
-## Contributing
-This project is in a very early stage of development. It is far from perfect.
-Contributions are welcome and appreciated!
+## Special thanks
+Special thanks to everyone who provided invaluable feedback and input,
+including, in no particular order:
+- @alenawang
+- @DWSR
+- @beeekind
+- @fergyfresh
+- @jcstryker
+- @peterbourgon
+- @theckman
