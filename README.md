@@ -20,10 +20,10 @@ clockwise run --url <zoom meeting url>
 
 ## Manual input
 Alternatively, you can leverage manual input mode, which collects user input via
-the TUI to manage participant count.
+the TUI to manage participant count. Just exclude the `--url` flag. 
 
 ```bash
-clockwise run --manual
+clockwise run
 ```
 
 ## Configuration
@@ -33,7 +33,8 @@ participant.
 This can be approximate, but you can use resources like indeed.com,
 glassdoor.com, and levels.fyi to be methodical in your approximation.
 
-`averageSalary` defaults to $150,000 and can be modified by using the `set` subcommand.
+`averageSalary` defaults to $150,000 and can be modified by using the `set`
+subcommand.
 
 ```bash
 $ clockwise set
@@ -42,7 +43,6 @@ $ clockwise set
 
 Alternatively, you can edit the configuration file directly at
 `~/.config/clockwise/clockwise.yaml`.
-
 
 ## Output
 Clockwise outputs total cost to a TUI that is refreshed every 500ms.
@@ -79,8 +79,8 @@ doesn't depend on an external GUI.
 - Feel free to modify the text font, color, and size to suit your preferences.
   The sky is the limit.
 - In the lower right hand corner, click `Start Virtual Camera`. 
-- You can optionally add your webcam as a video source as well and make the
-  cost a text overlay.
+- You can optionally add your webcam as a video source as well and make the cost
+  a text overlay.
   - In the Sources window, click the `+` icon.
   - Select `Video Capture Device`.
   - Click `OK`.
@@ -103,20 +103,20 @@ That's it! Make sure to add snarky remarks when your meetings drag on for added
 effect.
 
 ## To do
-- [ ] Do a pass through to make sure that errors are bubbling up and being handled properly.
+- [ ] Do a pass through to make sure that errors are bubbling up and being
+  handled properly.
 - [ ] Explore authenticated web scraping approach.
 - [ ] Explore Zoom's captcha requirement.
-- [ ] Document plugin flow to support other video conferencing platforms (Google
-  Meet, Microsoft Teams, etc.).
 - [ ] Unit test all the things.
 - [ ] Explore replacing OBS with a solution that doesn't require a GUI, like
   ffmpeg. 
 - [ ] Explore time-series based approach.
-- [ ] Explore crash recovery solutions (pick up where you left off). 
+- [ ] Explore crash recovery solutions.
 - [ ] Handle browser startup more gracefully. 
 - [ ] Make the TUI prettier.
 - [ ] Explore letting the clockwork zoom participant display the meeting cost. 
-- [ ] Consider alternative names for the clockwork zoom participant. Consider making it configurable. 
+- [ ] Consider making the clockwork-bot zoom participant name configurable.
+- [ ] Implement CI via GH actions.
 
 ## Contributing
 This project is in a very early stage of development. It is far from perfect.

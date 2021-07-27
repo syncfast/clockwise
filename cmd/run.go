@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/syncfast/clockwise/internal/scrape"
@@ -14,9 +17,21 @@ var runCmd = &cobra.Command{
 	Long:   ``,
 	PreRun: toggleDebug,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		manual, err := cmd.Flags().GetBool("manual")
+		url, err := cmd.Flags().GetString("url")
 		if err != nil {
 			return err
+		}
+
+		manual := false
+		if url == "" {
+			manual = true
+		}
+
+		// TODO: When additional video conference platforms are added, make this url evaluation more sophisticated.
+		if !manual {
+			if !strings.Contains(url, "zoom") {
+				return fmt.Errorf("provided url does not contain 'zoom'")
+			}
 		}
 
 		// We declare data here because it's consumed by both the `tui` and
@@ -49,6 +64,5 @@ var runCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(runCmd)
-	runCmd.Flags().BoolP("manual", "m", false, "Set participant count manually via the TUI.")
 	runCmd.Flags().StringP("url", "u", "", "The Zoom ")
 }
