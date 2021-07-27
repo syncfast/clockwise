@@ -141,6 +141,7 @@ type Data struct {
 func (data *Data) GetCount() int {
 	data.mtx.Lock()
 	defer data.mtx.Unlock()
+
 	return data.count
 }
 
@@ -155,6 +156,7 @@ func (data *Data) SetCount(count int) {
 func (data *Data) getCost() float32 {
 	data.mtx.Lock()
 	defer data.mtx.Unlock()
+
 	return data.cost
 }
 
@@ -169,6 +171,7 @@ func (data *Data) setCost(cost float32) {
 func (data *Data) getInput() string {
 	data.mtx.Lock()
 	defer data.mtx.Unlock()
+
 	return data.input
 }
 
@@ -182,6 +185,7 @@ func (data *Data) setInput(input string) {
 // tick configures the goroutine for the scheduled calculateCost update.
 func tick(s tcell.Screen, data *Data, manual bool, quit <-chan struct{}) {
 	t := time.NewTicker(refreshInterval)
+
 	for {
 		select {
 		case <-quit:
@@ -209,12 +213,14 @@ func calculateCost(data *Data) {
 func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
 	for _, c := range str {
 		var comb []rune
+
 		w := runewidth.RuneWidth(c)
 		if w == 0 {
 			comb = []rune{c}
 			c = ' '
 			w = 1
 		}
+
 		s.SetContent(x, y, c, comb, style)
 		x += w
 	}
@@ -223,8 +229,8 @@ func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
 // draw renders the TUI.
 func draw(s tcell.Screen, data *Data, manual bool) {
 	s.Clear()
-	style := tcell.StyleDefault.Foreground(tcell.ColorCornflowerBlue)
 
+	style := tcell.StyleDefault.Foreground(tcell.ColorCornflowerBlue)
 	emitStr(s, 0, 0, style, "Clockwise")
 
 	costString := fmt.Sprintf("Total cost: $%.2f", data.getCost())

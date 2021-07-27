@@ -27,7 +27,8 @@ var runCmd = &cobra.Command{
 			manual = true
 		}
 
-		// TODO: When additional video conference platforms are added, make this url evaluation more sophisticated.
+		// TODO: When additional video conference platforms are added, make this
+		// url evaluation more sophisticated.
 		if !manual {
 			if !strings.Contains(url, "zoom") {
 				return fmt.Errorf("provided url does not contain 'zoom'")

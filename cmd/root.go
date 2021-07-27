@@ -24,6 +24,7 @@ var rootCmd = &cobra.Command{
 func rootFunc(cmd *cobra.Command, args []string) error {
 	cmd.Help()
 	os.Exit(1)
+
 	return nil
 }
 

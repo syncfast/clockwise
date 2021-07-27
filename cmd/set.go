@@ -38,6 +38,7 @@ var setCmd = &cobra.Command{
 		if err := viper.WriteConfig(); err != nil {
 			return err
 		}
+
 		log.Printf("Average salary updated to %v in configuration file.", averageSalary)
 
 		return nil
