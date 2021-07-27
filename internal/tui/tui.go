@@ -1,5 +1,3 @@
-// Package tui creates the Terminal User Interface, calculates cost over time,
-// and collects user input in manual mode.
 package tui
 
 import (
@@ -193,19 +191,6 @@ func tick(s tcell.Screen, data *Data, manual bool, quit <-chan struct{}) {
 		case <-t.C:
 			draw(s, data, manual)
 		}
-	}
-}
-
-// calculateCost calculates the total cost.
-func calculateCost(data *Data) {
-	for {
-		count := data.GetCount()
-		total := data.getCost()
-		fullyLoadedCostMultiplier := float32(1.75)
-		cps := float32(count) * fullyLoadedCostMultiplier * float32(150000) / 7488000
-		total += cps
-		data.setCost(total)
-		time.Sleep(refreshInterval)
 	}
 }
 

@@ -39,7 +39,7 @@ var setCmd = &cobra.Command{
 			return err
 		}
 
-		log.Printf("Average salary updated to %v in configuration file.", averageSalary)
+		log.Printf("The average annual salary of meeting participants has been updated to %v in the configuration file.", averageSalary)
 
 		return nil
 	},
