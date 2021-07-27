@@ -1,4 +1,4 @@
-# &orarr; Clockwise
+# &orarr;lockwise
 
 Clockwise is a meeting cost calculator designed to encourage more efficient
 meetings. 
