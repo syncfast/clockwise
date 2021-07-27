@@ -48,7 +48,7 @@ func GetParticipants(url string, refreshInterval int, data *tui.Data, pw *playwr
 	}
 
 	selector := "text=Your Name"
-	if err := page.Fill(selector, "clockwise", playwright.FrameFillOptions{
+	if err := page.Fill(selector, "clockwise-bot", playwright.FrameFillOptions{
 		Timeout: &timeout,
 	}); err != nil {
 		return err

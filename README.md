@@ -10,66 +10,50 @@ meetings.
 go get github.com/syncfast/clockwise
 ```
 
-## Usage
+## Basic Usage
+Clockwise supports the ability to automatically scrape participant count from a
+specified zoom meeting by passing the zoom url through the `--url` / `-u` flag. 
+
+```bash
+clockwise run --url <zoom meeting url>
 ```
-$ clockwise
-Clockwise is a meeting cost calculator designed to encourage more efficient meetings.
 
-Usage:
-  clockwise [flags]
-  clockwise [command]
+## Manual input
+Alternatively, you can leverage manual input mode, which collects user input via
+the TUI to manage participant count.
 
-Available Commands:
-  help        Help about any command
-  run         Run clockwise
-  set         Set the average annual salary of meeting participants
-  version     Print version
-
-Flags:
-  -d, --debug   verbose logging
-  -h, --help    help for clockwise
-
-Use "clockwise [command] --help" for more information about a command.
+```bash
+clockwise run --manual
 ```
 
 ## Configuration
 Clockwise relies on a single configuration item: average annual salary per
-participant. This can be approximate, but you can use resources like indeed.com,
+participant.
+
+This can be approximate, but you can use resources like indeed.com,
 glassdoor.com, and levels.fyi to be methodical in your approximation.
 
-`averageSalary` defaults to $150,000 and can be modified by editing the
-configuration file located at `~/.config/clockwise/clockwise.yaml` or by using
-the `set` subcommand:
+`averageSalary` defaults to $150,000 and can be modified by using the `set` subcommand.
 
 ```bash
 $ clockwise set
 ? Set average annual salary of meeting participants: (150000) 
 ```
 
-## Input
-Clockwise supports the ability to automatically scrape participant count from a
-specified zoom meeting by passing in the appropriate zoom URL. Just run:
-```bash
-clockwise run --url <zoom meeting url>
-```
+Alternatively, you can edit the configuration file directly at
+`~/.config/clockwise/clockwise.yaml`.
 
-Alternatively, you can leverage manual input mode, which collects user input via
-a TUI (terminal UI) to manage participant count:
-```bash
-clockwise run --manual
-```
 
 ## Output
-### TUI
-Clockwise outputs total cost to a TUI. It's refreshed every 500ms.
+Clockwise outputs total cost to a TUI that is refreshed every 500ms.
 
-### Virtual camera
-Clockwise can integrate with [OBS](https://obsproject.com/) to output the total
-cost of a meeting as it increases in real time via a virtual camera that can be
-used as a video source to passive aggressively remind everyone in the meeting
-how much the meeting is costing. Anecdotally, raising awareness this way led to
-a rapid reduction in meeting frequency and duration. To change something, track
-it. 
+## Displaying total cost in zoom
+Clockwise, in conjunction with [OBS](https://obsproject.com/), can take your
+total meeting cost at it increases in real time and turn it into a virtual
+camera. This can then be consumed by Zoom to passive aggressively remind
+everyone precisely how much a given meeting costs. Anecdotally, this raised
+awareness led to more focused and less frequent meetings for my team. To change
+something, track it. 
 
 ## OBS Configuration
 OBS configuration is a bit involved, but it's something that you only need to do
@@ -131,6 +115,8 @@ effect.
 - [ ] Explore crash recovery solutions (pick up where you left off). 
 - [ ] Handle browser startup more gracefully. 
 - [ ] Make the TUI prettier.
+- [ ] Explore letting the clockwork zoom participant display the meeting cost. 
+- [ ] Consider alternative names for the clockwork zoom participant. Consider making it configurable. 
 
 ## Contributing
 This project is in a very early stage of development. It is far from perfect.
