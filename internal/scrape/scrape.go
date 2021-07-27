@@ -81,7 +81,7 @@ func GetParticipants(url string, refreshInterval int, data *tui.Data, pw *playwr
 			return err
 		}
 
-		data.SetCount(count)
+		data.SetCount(count - 1)
 
 		time.Sleep(time.Second * time.Duration(refreshInterval))
 	}
