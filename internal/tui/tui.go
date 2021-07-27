@@ -245,8 +245,8 @@ func draw(s tcell.Screen, data *Data, manual bool) {
 		emitStr(s, 0, 3, tcell.StyleDefault, inputString)
 
 		emitStr(s, 0, 4, faded, "Use [^/v] to modify participant count.")
-
 		emitStr(s, 0, 5, faded, "Alternatively, use numerical input followed by the enter key.")
+		emitStr(s, 0, 6, faded, "Press ESC or CTRL+C to quit.")
 	}
 
 	s.Show()
