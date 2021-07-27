@@ -224,6 +224,7 @@ func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
 func draw(s tcell.Screen, data *Data, manual bool) {
 	s.Clear()
 	style := tcell.StyleDefault.Foreground(tcell.ColorCornflowerBlue)
+
 	emitStr(s, 0, 0, style, "Clockwise")
 
 	costString := fmt.Sprintf("Total cost: $%.2f", data.getCost())
@@ -233,8 +234,13 @@ func draw(s tcell.Screen, data *Data, manual bool) {
 	emitStr(s, 0, 2, tcell.StyleDefault, countString)
 
 	if manual {
+		faded := tcell.StyleDefault.Foreground(tcell.ColorDimGray)
 		inputString := fmt.Sprintf("Input: %s", data.getInput())
 		emitStr(s, 0, 3, tcell.StyleDefault, inputString)
+
+		emitStr(s, 0, 4, faded, "Use [^/v] to modify participant count.")
+
+		emitStr(s, 0, 5, faded, "Alternatively, use numerical input followed by the enter key.")
 	}
 
 	s.Show()
