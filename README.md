@@ -50,7 +50,7 @@ Clockwise outputs total cost to a terminal UI (courtesy
 
 ## Displaying total cost in your Zoom meeting
 In conjunction with [OBS](https://obsproject.com/), Clockwise can print your
-total meeting cost at it increases in real time to a virtual camera. The virtual
+total meeting cost as it increases in real time to a virtual camera. The virtual
 camera can then be consumed by Zoom to passive aggressively remind everyone
 precisely how much a given meeting costs. Anecdotally, this raised awareness and
 led to more focused and less frequent meetings for my team. To change something,
@@ -109,10 +109,10 @@ of development and I consider myself a novice Gopher. None of the code is
 sacrosanct. Feel free to eviscerate it.
 
 ## To do
-These are up for grabs! If anything in this list interests you, feel free to
-open an issue expressing your intent to tackle it. Happy to field questions as
-they surface. Also, the list is not comprehensive, feature requests are welcome
-and appreciated.
+Most of these are up for grabs. If anything interests you, feel free to open an
+issue expressing your intent to tackle it. I'm happy to field questions (to the
+best of my ability) as they surface. Needless to say, feel free to submit
+feature requests via issues for anything that's not on the list. 
 - [ ] Unit test all the things.
 - [ ] Explore authenticated web scraping approach.
 - [ ] Explore replacing OBS with a solution that doesn't require a GUI, like
@@ -135,7 +135,8 @@ including, in no particular order:
 - @alenawang
 - @DWSR
 - @beeekind
-- @fergyfresh
-- @jcstryker
 - @peterbourgon
 - @theckman
+- @fergyfresh
+- @jcstryker
+
