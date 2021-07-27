@@ -119,6 +119,7 @@ That's it! Make sure to add snarky remarks when your meetings drag on for added
 effect.
 
 ## To do
+- [ ] Do a pass through to make sure that errors are bubbling up and being handled properly.
 - [ ] Explore authenticated web scraping approach.
 - [ ] Explore Zoom's captcha requirement.
 - [ ] Document plugin flow to support other video conferencing platforms (Google
@@ -129,7 +130,7 @@ effect.
 - [ ] Explore time-series based approach.
 - [ ] Explore crash recovery solutions (pick up where you left off). 
 - [ ] Handle browser startup more gracefully. 
-- [ ] Make the TUI prettier. 
+- [ ] Make the TUI prettier.
 
 ## Contributing
 This project is in a very early stage of development. It is far from perfect.
