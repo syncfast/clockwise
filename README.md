@@ -117,6 +117,12 @@ effect.
 - [ ] Explore letting the clockwork zoom participant display the meeting cost. 
 - [ ] Consider making the clockwork-bot zoom participant name configurable.
 - [ ] Implement CI via GH actions.
+- [ ] Currently, Clockwise does not work with meetings spawned by the Slack zoom
+  integration. It shouldn't be to difficult to implement. We just need some more
+  nuanced url handling in [zoom.go](internal/scrape/zoom.go).
+- [ ] Implement
+  [PMI](https://support.zoom.us/hc/en-us/articles/203276937-Using-Personal-Meeting-ID-PMI-)
+  handling. 
 
 ## Contributing
 This project is in a very early stage of development. It is far from perfect.
