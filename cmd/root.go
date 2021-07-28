@@ -70,5 +70,5 @@ func initConfig() {
 		}
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	viper.AutomaticEnv() // Read in environment variables that match.
 }
