@@ -10,9 +10,9 @@ meetings.
 go get github.com/syncfast/clockwise
 ```
 
-## Basic Usage
+## Usage
 Clockwise supports the ability to automatically scrape participant count from a
-specified zoom meeting by passing the zoom url through the `--url` / `-u` flag. 
+zoom meeting by passing the invitation url through the `--url` / `-u` flag. 
 
 ```bash
 clockwise run --url <zoom meeting url>
@@ -47,6 +47,8 @@ Alternatively, you can edit the configuration file directly at
 ## TUI
 Clockwise outputs total cost to a terminal UI (courtesy
 [tcell](https://github.com/gdamore/tcell)) that is refreshed every 500ms.
+
+<img src="docs/img/tui.gif" width="200"/>
 
 ## Displaying total cost in your Zoom meeting
 In conjunction with [OBS](https://obsproject.com/), Clockwise can print your
@@ -133,10 +135,10 @@ feature requests via issues for anything that's not on the list.
 Special thanks to everyone who provided invaluable feedback and input,
 including, in no particular order:
 - @alenawang
+- @redyama
 - @DWSR
 - @beeekind
 - @peterbourgon
 - @theckman
 - @fergyfresh
 - @jcstryker
-
