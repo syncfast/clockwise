@@ -10,6 +10,7 @@ import (
 	"unicode"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/mattn/go-runewidth"
@@ -45,9 +46,11 @@ func Start(manual bool, data *Data) {
 		log.Fatal(err)
 	}
 
+	averageSalary := viper.GetViper().GetInt("averageSalary")
+
 	// Start cost calculation goroutine.
 	go func() {
-		calculateCost(data)
+		calculateCost(data, averageSalary)
 	}()
 
 	// Start cost file generation subroutine.
