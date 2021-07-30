@@ -127,7 +127,7 @@ func Start(manual bool, data *Data) {
 	tick(s, data, manual, quit)
 	s.Fini()
 
-	// log.Info("Clockwise has been terminated.")
+	log.Infof("Total cost: $%.2f", data.getCost())
 }
 
 // data stores variables passed around between the various goRoutines.
