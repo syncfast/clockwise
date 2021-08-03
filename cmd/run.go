@@ -34,10 +34,11 @@ var runCmd = &cobra.Command{
 
 		var scrape_func = scrape.GetParticipantsZoom
 		if !manual {
-			if strings.Contains(url, "zoom") {
-				scrape_func = scrape.GetParticipantsZoom
-			} else if strings.Contains(url, "meet.jit.si") || force_jitsi {
+			// Checking optional force_jitsi flag first
+			if strings.Contains(url, "meet.jit.si") || force_jitsi {
 				scrape_func = scrape.GetParticipantsJitsi
+			} else if strings.Contains(url, "zoom") {
+				scrape_func = scrape.GetParticipantsZoom
 			} else {
 				return fmt.Errorf("Provided url does not contain known domain")
 			}
