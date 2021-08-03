@@ -22,16 +22,24 @@ var runCmd = &cobra.Command{
 			return err
 		}
 
+		force_jitsi, err := cmd.Flags().GetBool("jitsi")
+		if err != nil {
+			return err
+		}
+
 		manual := false
 		if url == "" {
 			manual = true
 		}
 
-		// TODO: When additional video conference platforms are added, make this
-		// url evaluation more sophisticated.
+		var scrape_func = scrape.GetParticipantsZoom
 		if !manual {
-			if !strings.Contains(url, "zoom") {
-				return fmt.Errorf("provided url does not contain 'zoom'")
+			if strings.Contains(url, "zoom") {
+				scrape_func = scrape.GetParticipantsZoom
+			} else if strings.Contains(url, "meet.jit.si") || force_jitsi {
+				scrape_func = scrape.GetParticipantsJitsi
+			} else {
+				return fmt.Errorf("Provided url does not contain known domain")
 			}
 		}
 
@@ -49,7 +57,7 @@ var runCmd = &cobra.Command{
 			log.Info("Initializing TUI.")
 			url, err := cmd.Flags().GetString("url")
 			go func() {
-				err = scrape.GetParticipantsZoom(url, 1, &data, pw)
+				err = scrape_func(url, 1, &data, pw)
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -65,5 +73,6 @@ var runCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(runCmd)
-	runCmd.Flags().StringP("url", "u", "", "The Zoom ")
+	runCmd.Flags().StringP("url", "u", "", "Meeting URL")
+	runCmd.Flags().Bool("jitsi", false, "Force Jitsi URL scraping")
 }
