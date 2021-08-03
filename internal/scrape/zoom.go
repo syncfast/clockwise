@@ -13,7 +13,7 @@ import (
 // getParticipants retrieves the total participant count from a specified zoom
 // URL. It runs in a loop and updates the passed in `Data` struct every
 // `refreshInterval` seconds.
-func GetParticipants(url string, refreshInterval int, data *tui.Data, pw *playwright.Playwright) error {
+func GetParticipantsZoom(url string, refreshInterval int, data *tui.Data, pw *playwright.Playwright) error {
 	if strings.Contains(url, "zoom.us/my/") {
 		return fmt.Errorf(`Error: clockwise is not compatible with Zoom Personal Meeting IDs at the moment.
 Disabling your PMI is as as simple as clicking a checkbox.

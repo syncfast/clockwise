@@ -49,7 +49,7 @@ var runCmd = &cobra.Command{
 			log.Info("Initializing TUI.")
 			url, err := cmd.Flags().GetString("url")
 			go func() {
-				err = scrape.GetParticipants(url, 1, &data, pw)
+				err = scrape.GetParticipantsZoom(url, 1, &data, pw)
 				if err != nil {
 					log.Fatal(err)
 				}
