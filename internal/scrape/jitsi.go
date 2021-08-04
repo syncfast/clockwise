@@ -10,8 +10,8 @@ import (
 	"github.com/syncfast/clockwise/internal/tui"
 )
 
-// getParticipants retrieves the total participant count from a specified Jitsi
-// URL. It runs in a loop and updates the passed in `Data` struct every
+// GetParticipantsJitsi retrieves the total participant count from a specified
+// Jitsi URL. It runs in a loop and updates the passed in `Data` struct every
 // `refreshInterval` seconds.
 func GetParticipantsJitsi(url string, refreshInterval int, data *tui.Data, pw *playwright.Playwright) error {
 	var timeout float64 = 5000

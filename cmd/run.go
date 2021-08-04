@@ -22,7 +22,7 @@ var runCmd = &cobra.Command{
 			return err
 		}
 
-		force_jitsi, err := cmd.Flags().GetBool("jitsi")
+		forceJitsi, err := cmd.Flags().GetBool("jitsi")
 		if err != nil {
 			return err
 		}
@@ -32,14 +32,15 @@ var runCmd = &cobra.Command{
 			manual = true
 		}
 
-		var scrape_func = scrape.GetParticipantsZoom
+		var scraper scrape.Scraper
 		if !manual {
 			// Checking optional force_jitsi flag first
-			if strings.Contains(url, "meet.jit.si") || force_jitsi {
-				scrape_func = scrape.GetParticipantsJitsi
-			} else if strings.Contains(url, "zoom") {
-				scrape_func = scrape.GetParticipantsZoom
-			} else {
+			switch {
+			case forceJitsi || strings.Contains(url, "meet.jit.si"):
+				scraper = scrape.GetParticipantsJitsi
+			case strings.Contains(url, "zoom"):
+				scraper = scrape.GetParticipantsZoom
+			default:
 				return fmt.Errorf("Provided url does not contain known domain")
 			}
 		}
@@ -58,7 +59,7 @@ var runCmd = &cobra.Command{
 			log.Info("Initializing TUI.")
 			url, err := cmd.Flags().GetString("url")
 			go func() {
-				err = scrape_func(url, 1, &data, pw)
+				err = scraper(url, 1, &data, pw)
 				if err != nil {
 					log.Fatal(err)
 				}
