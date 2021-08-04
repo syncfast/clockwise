@@ -10,66 +10,96 @@ import (
 	"github.com/syncfast/clockwise/internal/tui"
 )
 
-// GetParticipantsJitsi retrieves the total participant count from a specified
-// Jitsi URL. It runs in a loop and updates the passed in `Data` struct every
-// `refreshInterval` seconds.
-func GetParticipantsJitsi(url string, refreshInterval int, data *tui.Data, pw *playwright.Playwright) error {
-	var timeout float64 = 5000
+type Jitsi struct {
+	url     string
+	pw      *playwright.Playwright
+	page    playwright.Page
+	timeout float64
+}
 
-	browser, err := pw.Chromium.Launch()
+func NewJitsi(url string, pw *playwright.Playwright) *Jitsi {
+	return &Jitsi{
+		url:     url,
+		pw:      pw,
+		page:    nil,
+		timeout: 5000,
+	}
+}
+
+func (j *Jitsi) VisitMeetingUrl() error {
+	browser, err := j.pw.Chromium.Launch()
 	if err != nil {
 		return fmt.Errorf("could not launch browser: %w", err)
 	}
 
-	page, err := browser.NewPage()
+	j.page, err = browser.NewPage()
 	if err != nil {
 		return fmt.Errorf("could not create page: %w", err)
 	}
 
-	if _, err = page.Goto(url, playwright.PageGotoOptions{
+	if _, err = j.page.Goto(j.url, playwright.PageGotoOptions{
 		WaitUntil: playwright.WaitUntilStateLoad,
 	}); err != nil {
 		return fmt.Errorf("could not goto: %w", err)
 	}
 
+	return nil
+}
+
+func (j *Jitsi) FillBotName(botName string) error {
 	selector := "#Prejoin-input-field-id"
-	if err := page.Fill(selector, "clockwise-bot", playwright.FrameFillOptions{
-		Timeout: &timeout,
+	if err := j.page.Fill(selector, botName, playwright.FrameFillOptions{
+		Timeout: &j.timeout,
 	}); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+func (j *Jitsi) JoinMeeting() error {
 	// Wait for and click Join button
-	element, err := page.WaitForSelector("#lobby-screen > div.content > div.prejoin-input-area-container > div > div > div")
+	element, err := j.page.WaitForSelector("#lobby-screen > div.content > div.prejoin-input-area-container > div > div > div")
 	if err != nil {
 		return fmt.Errorf("failed to wait for join button: %w", err)
 	}
 
 	if err := element.Click(playwright.ElementHandleClickOptions{
-		Timeout: &timeout,
+		Timeout: &j.timeout,
 	}); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+func (j *Jitsi) ActivateVirtualWebcam(camName string) error {
+	return nil
+}
+
+// GetParticipants retrieves the total participant count from a specified
+// Jitsi URL. It runs in a loop and updates the passed in `Data` struct every
+// `refreshInterval` seconds.
+func (j *Jitsi) GetParticipants(refreshInterval int, data *tui.Data) error {
 	// Wait for and click participants sidebar
-	element, err = page.WaitForSelector("#new-toolbox > div > div > div > div:nth-child(6)")
+	element, err := j.page.WaitForSelector("#new-toolbox > div > div > div > div:nth-child(6)")
 	if err != nil {
 		return fmt.Errorf("failed to wait for participant sidebar button: %w", err)
 	}
 
 	if err := element.Click(playwright.ElementHandleClickOptions{
-		Timeout: &timeout,
+		Timeout: &j.timeout,
 	}); err != nil {
 		return err
 	}
 
-	_, err = page.WaitForSelector("#layout_wrapper > div.participants_pane > div")
+	_, err = j.page.WaitForSelector("#layout_wrapper > div.participants_pane > div")
 	if err != nil {
 		return fmt.Errorf("failed to wait for participant sidebar: %w", err)
 	}
 
 	for {
-		res, err := page.QuerySelector("#layout_wrapper > div.participants_pane > div")
+		res, err := j.page.QuerySelector("#layout_wrapper > div.participants_pane > div")
 		if err != nil {
 			return err
 		}

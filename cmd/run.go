@@ -32,19 +32,6 @@ var runCmd = &cobra.Command{
 			manual = true
 		}
 
-		var scraper scrape.Scraper
-		if !manual {
-			// Checking optional force_jitsi flag first
-			switch {
-			case forceJitsi || strings.Contains(url, "meet.jit.si"):
-				scraper = scrape.GetParticipantsJitsi
-			case strings.Contains(url, "zoom"):
-				scraper = scrape.GetParticipantsZoom
-			default:
-				return fmt.Errorf("Provided url does not contain known domain")
-			}
-		}
-
 		// We declare data here because it's consumed by both the `tui` and
 		// `scrape` packages.
 		var data tui.Data
@@ -56,10 +43,26 @@ var runCmd = &cobra.Command{
 				return err
 			}
 
+			// Checking optional force_jitsi flag first
+			var meetingImpl scrape.MeetingImpl
+			switch {
+			case forceJitsi || strings.Contains(url, "meet.jit.si"):
+				meetingImpl = scrape.NewJitsi(url, pw)
+			case strings.Contains(url, "zoom"):
+				meetingImpl = scrape.NewZoom(url, pw)
+			default:
+				return fmt.Errorf("Provided url does not contain known domain")
+			}
+
 			log.Info("Initializing TUI.")
-			url, err := cmd.Flags().GetString("url")
 			go func() {
-				err = scraper(url, 1, &data, pw)
+				meetingImpl.VisitMeetingUrl()
+				meetingImpl.FillBotName("clockwise-bot")
+				meetingImpl.JoinMeeting()
+				// FIXME: Deactivated until ffmpeg vcam gets implemented
+				// meetingImpl.ActivateVirtualWebcam("")
+
+				err = meetingImpl.GetParticipants(1, &data)
 				if err != nil {
 					log.Fatal(err)
 				}
