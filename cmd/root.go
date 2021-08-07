@@ -11,8 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var cfgFile string
-
 var rootCmd = &cobra.Command{
 	Use:    "clockwise",
 	Short:  "Clockwise is a meeting cost calculator designed to encourage more efficient meetings",
