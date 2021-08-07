@@ -32,7 +32,10 @@ var setCmd = &cobra.Command{
 			},
 		}
 
-		survey.AskOne(q.Prompt, &averageSalary, survey.WithValidator(q.Validate))
+		err := survey.AskOne(q.Prompt, &averageSalary, survey.WithValidator(q.Validate))
+		if err != nil {
+			return err
+		}
 
 		viper.GetViper().Set("averageSalary", averageSalary)
 		if err := viper.WriteConfig(); err != nil {
