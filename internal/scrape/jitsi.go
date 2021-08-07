@@ -74,6 +74,65 @@ func (j *Jitsi) JoinMeeting() error {
 }
 
 func (j *Jitsi) ActivateVirtualWebcam(camName string) error {
+	fmt.Print("Locating camera activation button")
+	// Locate camera activation button
+	j.page.WaitForSelector("#new-toolbox > div > div > div > div.video-preview > div > div.toolbox-button")
+	res, err := j.page.QuerySelector("#new-toolbox > div > div > div > div.video-preview > div > div.toolbox-button")
+	if err != nil {
+		return err
+	}
+
+	fmt.Print("Check if camera is activated")
+	// Check if camera is activated
+	button_state, err := res.GetAttribute("aria-pressed")
+	if err != nil {
+		return err
+	}
+
+	fmt.Print("Camera activation button: ", button_state)
+	// If button is not pressed, press it
+	if button_state == "true" {
+		fmt.Print("Clicking on camera activation")
+		err = res.Click()
+		if err != nil {
+			return err
+		}
+	}
+
+	fmt.Print("Check for video details (exposing available webcams)")
+	// Check for video details (exposing available webcams)
+	j.page.WaitForSelector("#video-settings-button")
+	res, err = j.page.QuerySelector("#video-settings-button")
+	if err != nil {
+		return err
+	}
+
+	// Check if video settings (list of webcams) is expanded already
+	fmt.Print("Check if video settings (list of webcams) is expanded already")
+	button_state, err = res.GetAttribute("aria-expanded")
+	if err != nil {
+		return err
+	}
+
+	fmt.Print("Camera settings button: ", button_state)
+	if button_state == "false" {
+		fmt.Print("Clicking on expand settings")
+		err = res.Click()
+		if err != nil {
+			return err
+		}
+	}
+
+	fmt.Print("Grabbing Video Settings dialog")
+	j.page.WaitForSelector("#video-settings-dialog")
+	res, err = j.page.QuerySelector("#video-settings-dialog")
+	if err != nil {
+		return err
+	}
+
+	fmt.Print("Printing inner html")
+	fmt.Print(res.InnerHTML())
+
 	return nil
 }
 

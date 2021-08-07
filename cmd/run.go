@@ -60,7 +60,7 @@ var runCmd = &cobra.Command{
 				meetingImpl.FillBotName("clockwise-bot")
 				meetingImpl.JoinMeeting()
 				// FIXME: Deactivated until ffmpeg vcam gets implemented
-				// meetingImpl.ActivateVirtualWebcam("")
+				meetingImpl.ActivateVirtualWebcam("")
 
 				err = meetingImpl.GetParticipants(1, &data)
 				if err != nil {
