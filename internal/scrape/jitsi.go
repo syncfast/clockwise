@@ -2,9 +2,9 @@ package scrape
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"time"
-	"regexp"
 
 	"github.com/mxschmitt/playwright-go"
 	"github.com/syncfast/clockwise/internal/tui"
@@ -40,23 +40,33 @@ func GetParticipantsJitsi(url string, refreshInterval int, data *tui.Data, pw *p
 	}
 
 	// Wait for and click Join button
-	page.WaitForSelector("#lobby-screen > div.content > div.prejoin-input-area-container > div > div > div")
+	element, err := page.WaitForSelector("#lobby-screen > div.content > div.prejoin-input-area-container > div > div > div")
+	if err != nil {
+		return fmt.Errorf("failed to wait for join button: %w", err)
+	}
 
-	if err := page.Click("#lobby-screen > div.content > div.prejoin-input-area-container > div > div > div", playwright.PageClickOptions{
+	if err := element.Click(playwright.ElementHandleClickOptions{
 		Timeout: &timeout,
 	}); err != nil {
 		return err
 	}
 
 	// Wait for and click participants sidebar
-	page.WaitForSelector("#new-toolbox > div > div > div > div:nth-child(6)")
-	if err := page.Click("#new-toolbox > div > div > div > div:nth-child(6)", playwright.PageClickOptions{
+	element, err = page.WaitForSelector("#new-toolbox > div > div > div > div:nth-child(6)")
+	if err != nil {
+		return fmt.Errorf("failed to wait for participant sidebar button: %w", err)
+	}
+
+	if err := element.Click(playwright.ElementHandleClickOptions{
 		Timeout: &timeout,
 	}); err != nil {
 		return err
 	}
 
-	page.WaitForSelector("#layout_wrapper > div.participants_pane > div")
+	_, err = page.WaitForSelector("#layout_wrapper > div.participants_pane > div")
+	if err != nil {
+		return fmt.Errorf("failed to wait for participant sidebar: %w", err)
+	}
 
 	for {
 		res, err := page.QuerySelector("#layout_wrapper > div.participants_pane > div")

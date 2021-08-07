@@ -47,15 +47,21 @@ Please visit https://support.zoom.us/hc/en-us/articles/203276937-Using-Personal-
 		return err
 	}
 
-	page.WaitForSelector("button#joinBtn")
+	element, err := page.WaitForSelector("button#joinBtn")
+	if err != nil {
+		return fmt.Errorf("failed to wait for join button: %w", err)
+	}
 
-	if err := page.Click("button#joinBtn", playwright.PageClickOptions{
+	if err := element.Click(playwright.ElementHandleClickOptions{
 		Timeout: &timeout,
 	}); err != nil {
 		return err
 	}
 
-	page.WaitForSelector(".footer-button__number-counter")
+	_, err = page.WaitForSelector(".footer-button__number-counter")
+	if err != nil {
+		return fmt.Errorf("failed to wait for participant counter: %w", err)
+	}
 
 	for {
 		res, err := page.QuerySelector(".footer-button__number-counter")
