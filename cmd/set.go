@@ -16,51 +16,54 @@ var setCmd = &cobra.Command{
 	Long:   `Set the average annual salary of meeting participants. This does not need to be an exact number.`,
 	PreRun: toggleDebug,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		averageSalary := viper.GetViper().GetInt("averageSalary")
-		currencySymbol := viper.GetViper().GetString("currencySymbol")
+		// Fetch currently set values from config or default values
+		averageSalaryPrev := viper.GetViper().GetInt("averageSalary")
+		currencySymbolPrev := viper.GetViper().GetString("currencySymbol")
 
-		qSalary := &survey.Question{
-			Prompt: &survey.Input{
-				Message: "Set average annual salary of meeting participants:",
-				Default: strconv.Itoa(averageSalary),
+		q := []*survey.Question{
+			{
+				Name: "averageSalary",
+				Prompt: &survey.Input{
+					Message: "Set average annual salary of meeting participants:",
+					Default: strconv.Itoa(averageSalaryPrev),
+				},
+				Validate: func(val interface{}) error {
+					if _, err := strconv.Atoi(val.(string)); err != nil {
+						return err
+					}
+
+					return nil
+				},
 			},
-			Validate: func(val interface{}) error {
-				if _, err := strconv.Atoi(val.(string)); err != nil {
-					return err
-				}
-
-				return nil
+			{
+				Name: "currencySymbol",
+				Prompt: &survey.Input{
+					Message: "Set symbol or abbreviation of your local currency:",
+					Default: currencySymbolPrev,
+				},
 			},
 		}
 
-		qCurrencySymbol := &survey.Question{
-			Prompt: &survey.Input{
-				Message: "Set symbol or abbreviation of your local currency:",
-				Default: "$",
-			},
-		}
+		answers := struct {
+			AverageSalary  int
+			CurrencySymbol string
+		}{}
 
-		err := survey.AskOne(qSalary.Prompt, &averageSalary, survey.WithValidator(qSalary.Validate))
+		err := survey.Ask(q, &answers)
 		if err != nil {
 			return err
 		}
 
-		// No validation required for currencySymbol
-		err = survey.AskOne(qCurrencySymbol.Prompt, &currencySymbol)
-		if err != nil {
-			return err
-		}
-
-		viper.GetViper().Set("averageSalary", averageSalary)
-		viper.GetViper().Set("currencySymbol", currencySymbol)
+		viper.GetViper().Set("averageSalary", answers.AverageSalary)
+		viper.GetViper().Set("currencySymbol", answers.CurrencySymbol)
 		if err := viper.WriteConfig(); err != nil {
 			return err
 		}
 
 		log.Printf(
 			"The average annual salary of meeting participants has been updated to %s %v in the configuration file.",
-			currencySymbol,
-			averageSalary,
+			answers.CurrencySymbol,
+			answers.AverageSalary,
 		)
 
 		return nil
