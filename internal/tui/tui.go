@@ -47,6 +47,8 @@ func Start(manual bool, data *Data) {
 	}
 
 	averageSalary := viper.GetViper().GetInt("averageSalary")
+	currencySymbol := viper.GetViper().GetString("currencySymbol")
+	data.currencySymbol = currencySymbol
 
 	// Start cost calculation goroutine.
 	go func() {
@@ -127,19 +129,16 @@ func Start(manual bool, data *Data) {
 	tick(s, data, manual, quit)
 	s.Fini()
 
-	log.Infof("Total cost: %s%.2f", data.GetCurrencySymbol(), data.getCost())
+	log.Infof("Total cost: %s%.2f", data.currencySymbol, data.getCost())
 }
 
 // data stores variables passed around between the various goRoutines.
 type Data struct {
-	mtx   sync.Mutex
-	count int
-	cost  float32
-	input string
-}
-
-func (data *Data) GetCurrencySymbol() string {
-	return viper.GetViper().GetString("currencySymbol")
+	mtx            sync.Mutex
+	count          int
+	cost           float32
+	input          string
+	currencySymbol string
 }
 
 // Get count.
@@ -225,7 +224,7 @@ func draw(s tcell.Screen, data *Data, manual bool) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorCornflowerBlue)
 	emitStr(s, 0, 0, style, "Clockwise")
 
-	costString := fmt.Sprintf("Total cost: %s%.2f", data.GetCurrencySymbol(), data.getCost())
+	costString := fmt.Sprintf("Total cost: %s%.2f", data.currencySymbol, data.getCost())
 	emitStr(s, 0, 1, tcell.StyleDefault, costString)
 
 	countString := fmt.Sprintf("Participant count: %s", strconv.Itoa((data.GetCount())))
@@ -256,7 +255,7 @@ func writeCostFile(data *Data) {
 	outputFile := outputFolder + "clockwise.txt"
 
 	for {
-		costString := fmt.Sprintf("Total cost: %s%.2f\n", data.GetCurrencySymbol(), data.getCost())
+		costString := fmt.Sprintf("Total cost: %s%.2f\n", data.currencySymbol, data.getCost())
 
 		if err := ioutil.WriteFile(outputFile, []byte(costString), 0600); err != nil {
 			log.Fatal(err)
