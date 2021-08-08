@@ -12,7 +12,7 @@ import (
 // setCmd represents the set command.
 var setCmd = &cobra.Command{
 	Use:    "set",
-	Short:  "Set the average annual salary of meeting participants",
+	Short:  "Set the average annual salary of meeting participants and currency representation",
 	Long:   `Set the average annual salary of meeting participants. This does not need to be an exact number.`,
 	PreRun: toggleDebug,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -35,7 +35,7 @@ var setCmd = &cobra.Command{
 
 		qCurrencySymbol := &survey.Question{
 			Prompt: &survey.Input{
-				Message: "Set symbol or abbrevation of your local currency:",
+				Message: "Set symbol or abbreviation of your local currency:",
 				Default: "$",
 			},
 		}
