@@ -17,8 +17,9 @@ var setCmd = &cobra.Command{
 	PreRun: toggleDebug,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		averageSalary := viper.GetViper().GetInt("averageSalary")
+		currencySymbol := viper.GetViper().GetString("currencySymbol")
 
-		q := &survey.Question{
+		qSalary := &survey.Question{
 			Prompt: &survey.Input{
 				Message: "Set average annual salary of meeting participants:",
 				Default: strconv.Itoa(averageSalary),
@@ -32,18 +33,33 @@ var setCmd = &cobra.Command{
 			},
 		}
 
-		err := survey.AskOne(q.Prompt, &averageSalary, survey.WithValidator(q.Validate))
+		qCurrencySymbol := &survey.Question{
+			Prompt: &survey.Input{
+				Message: "Set symbol or abbrevation of your local currency:",
+				Default: "$",
+			},
+		}
+
+		err := survey.AskOne(qSalary.Prompt, &averageSalary, survey.WithValidator(qSalary.Validate))
+		if err != nil {
+			return err
+		}
+
+		// No validation required for currencySymbol
+		err = survey.AskOne(qCurrencySymbol.Prompt, &currencySymbol)
 		if err != nil {
 			return err
 		}
 
 		viper.GetViper().Set("averageSalary", averageSalary)
+		viper.GetViper().Set("currencySymbol", currencySymbol)
 		if err := viper.WriteConfig(); err != nil {
 			return err
 		}
 
 		log.Printf(
-			"The average annual salary of meeting participants has been updated to %v in the configuration file.",
+			"The average annual salary of meeting participants has been updated to %s %v in the configuration file.",
+			currencySymbol,
 			averageSalary,
 		)
 
