@@ -11,8 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var cfgFile string
-
 var rootCmd = &cobra.Command{
 	Use:    "clockwise",
 	Short:  "Clockwise is a meeting cost calculator designed to encourage more efficient meetings",
@@ -22,7 +20,7 @@ var rootCmd = &cobra.Command{
 }
 
 func rootFunc(cmd *cobra.Command, args []string) error {
-	cmd.Help()
+	_ = cmd.Help()
 	os.Exit(1)
 
 	return nil
