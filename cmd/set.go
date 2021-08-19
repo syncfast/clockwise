@@ -61,7 +61,7 @@ var setCmd = &cobra.Command{
 		}
 
 		log.Printf(
-			"The average annual salary of meeting participants has been updated to %s %v in the configuration file.",
+			"The average annual salary of meeting participants has been updated to %s%v in the configuration file.",
 			answers.CurrencySymbol,
 			answers.AverageSalary,
 		)
