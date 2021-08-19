@@ -10,7 +10,6 @@ import (
 	"unicode"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/mattn/go-runewidth"
@@ -38,7 +37,7 @@ func initScreen() (tcell.Screen, error) {
 	return s, nil
 }
 
-func Start(manual bool, data *Data) {
+func Start(data *Data, config *Config) {
 	// var data Data
 
 	s, err := initScreen()
@@ -46,18 +45,14 @@ func Start(manual bool, data *Data) {
 		log.Fatal(err)
 	}
 
-	averageSalary := viper.GetViper().GetInt("averageSalary")
-	currencySymbol := viper.GetViper().GetString("currencySymbol")
-	data.currencySymbol = currencySymbol
-
 	// Start cost calculation goroutine.
 	go func() {
-		calculateCost(data, averageSalary)
+		calculateCost(data, config.GetAverageSalary())
 	}()
 
 	// Start cost file generation subroutine.
 	go func() {
-		writeCostFile(data)
+		writeCostFile(data, config)
 	}()
 
 	quit := make(chan struct{})
@@ -77,10 +72,10 @@ func Start(manual bool, data *Data) {
 				}
 			case *tcell.EventResize:
 				s.Sync()
-				draw(s, data, manual)
+				draw(s, data, config)
 			}
 
-			if manual {
+			if config.GetManualMode() {
 				switch ev := ev.(type) {
 				case *tcell.EventKey:
 					switch ev.Key() {
@@ -120,25 +115,24 @@ func Start(manual bool, data *Data) {
 					}
 
 					// Render TUI after processing input.
-					draw(s, data, manual)
+					draw(s, data, config)
 				}
 			}
 		}
 	}()
 
-	tick(s, data, manual, quit)
+	tick(s, data, config, quit)
 	s.Fini()
 
-	log.Infof("Total cost: %s%.2f", data.currencySymbol, data.getCost())
+	log.Infof("Total cost: %s%.2f", config.GetCurrencySymbol(), data.getCost())
 }
 
 // data stores variables passed around between the various goRoutines.
 type Data struct {
-	mtx            sync.Mutex
-	count          int
-	cost           float32
-	input          string
-	currencySymbol string
+	mtx   sync.Mutex
+	count int
+	cost  float32
+	input string
 }
 
 // Get count.
@@ -187,7 +181,7 @@ func (data *Data) setInput(input string) {
 }
 
 // tick configures the goroutine for the scheduled calculateCost update.
-func tick(s tcell.Screen, data *Data, manual bool, quit <-chan struct{}) {
+func tick(s tcell.Screen, data *Data, config *Config, quit <-chan struct{}) {
 	t := time.NewTicker(refreshInterval)
 
 	for {
@@ -195,7 +189,7 @@ func tick(s tcell.Screen, data *Data, manual bool, quit <-chan struct{}) {
 		case <-quit:
 			return
 		case <-t.C:
-			draw(s, data, manual)
+			draw(s, data, config)
 		}
 	}
 }
@@ -218,19 +212,19 @@ func emitStr(s tcell.Screen, x, y int, style tcell.Style, str string) {
 }
 
 // draw renders the TUI.
-func draw(s tcell.Screen, data *Data, manual bool) {
+func draw(s tcell.Screen, data *Data, config *Config) {
 	s.Clear()
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorCornflowerBlue)
 	emitStr(s, 0, 0, style, "Clockwise")
 
-	costString := fmt.Sprintf("Total cost: %s%.2f", data.currencySymbol, data.getCost())
+	costString := fmt.Sprintf("Total cost: %s%.2f", config.GetCurrencySymbol(), data.getCost())
 	emitStr(s, 0, 1, tcell.StyleDefault, costString)
 
 	countString := fmt.Sprintf("Participant count: %s", strconv.Itoa((data.GetCount())))
 	emitStr(s, 0, 2, tcell.StyleDefault, countString)
 
-	if manual {
+	if config.GetManualMode() {
 		faded := tcell.StyleDefault.Foreground(tcell.ColorDimGray)
 		inputString := fmt.Sprintf("Input: %s", data.getInput())
 		emitStr(s, 0, 3, tcell.StyleDefault, inputString)
@@ -244,7 +238,7 @@ func draw(s tcell.Screen, data *Data, manual bool) {
 }
 
 // writeCostFile outputs the cost that gets consumed by OBS.
-func writeCostFile(data *Data) {
+func writeCostFile(data *Data, config *Config) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
@@ -255,7 +249,7 @@ func writeCostFile(data *Data) {
 	outputFile := outputFolder + "clockwise.txt"
 
 	for {
-		costString := fmt.Sprintf("Total cost: %s%.2f\n", data.currencySymbol, data.getCost())
+		costString := fmt.Sprintf("Total cost: %s%.2f\n", config.GetCurrencySymbol(), data.getCost())
 
 		if err := ioutil.WriteFile(outputFile, []byte(costString), 0600); err != nil {
 			log.Fatal(err)
