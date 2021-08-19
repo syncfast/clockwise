@@ -32,8 +32,11 @@ var runCmd = &cobra.Command{
 			manual = true
 		}
 
+		var config tui.Config
+		config.SetFromViperConfig(manual)
+
 		var scraper scrape.Scraper
-		if !manual {
+		if !config.GetManualMode() {
 			// Checking optional force_jitsi flag first
 			switch {
 			case forceJitsi || strings.Contains(url, "meet.jit.si"):
@@ -49,7 +52,7 @@ var runCmd = &cobra.Command{
 		// `scrape` packages.
 		var data tui.Data
 
-		if !manual {
+		if !config.GetManualMode() {
 			log.Println("Initializing playwright to scrape participant count.")
 			pw, err := scrape.InitializePlaywright()
 			if err != nil {
@@ -66,7 +69,7 @@ var runCmd = &cobra.Command{
 			}()
 		}
 
-		tui.Start(manual, &data)
+		tui.Start(&data, &config)
 		log.Info("Clockwise has been stopped.")
 
 		return nil

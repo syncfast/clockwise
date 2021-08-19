@@ -40,6 +40,7 @@ func init() {
 // initConfig reads and/or initializes the configuration file.
 func initConfig() {
 	viper.SetDefault("averageSalary", 150000)
+	viper.SetDefault("currencySymbol", "$")
 
 	// Find home directory.
 	home, err := homedir.Dir()
